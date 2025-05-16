@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego de Lectura</title>
     <style>
-        /* Estilos CSS */
+        /* Estilos CSS (sin cambios) */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -13,7 +13,6 @@
             margin: 0;
             padding: 0;
         }
-
         #game {
             display: flex;
             flex-direction: column;
@@ -23,26 +22,21 @@
             background: linear-gradient(to bottom, #83a4d4, #b6fbff);
             padding: 20px;
         }
-
         h1 {
             color: #fff;
             text-shadow: 2px 2px 4px #000;
         }
-
         #letters, #syllables, #images, #message, #currentWordDisplay, #inputArea {
             margin: 20px;
         }
-
         #letters, #currentWordDisplay, #inputArea {
             font-size: 48px;
         }
-
         #syllables {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
-
         #syllables button {
             font-size: 24px;
             padding: 10px;
@@ -53,86 +47,67 @@
             cursor: pointer;
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
-
-        .syllable-pa { background-color: #FF6347; } /* Rojo tomate */
+        .syllable-pa { background-color: #FF6347; }
         .syllable-pe { background-color: #FF6347; }
         .syllable-pi { background-color: #FF6347; }
         .syllable-po { background-color: #FF6347; }
         .syllable-pu { background-color: #FF6347; }
-
-        .syllable-ma { background-color: #4682B4; } /* Azul acero */
+        .syllable-ma { background-color: #4682B4; }
         .syllable-me { background-color: #4682B4; }
         .syllable-mi { background-color: #4682B4; }
         .syllable-mo { background-color: #4682B4; }
         .syllable-mu { background-color: #4682B4; }
-
-        .syllable-la { background-color: #32CD32; } /* Verde lima */
+        .syllable-la { background-color: #32CD32; }
         .syllable-le { background-color: #32CD32; }
         .syllable-li { background-color: #32CD32; }
         .syllable-lo { background-color: #32CD32; }
         .syllable-lu { background-color: #32CD32; }
-
         .syllable-ca, .syllable-ce, .syllable-ci, .syllable-co, .syllable-cu {
-            background-color: #FFD700; /* Dorado */
+            background-color: #FFD700;
         }
-
         .syllable-sa, .syllable-se, .syllable-si, .syllable-so, .syllable-su {
-            background-color: #FF69B4; /* Rosa caliente */
+            background-color: #FF69B4;
         }
-
         .syllable-ba, .syllable-be, .syllable-bi, .syllable-bo, .syllable-bu {
-            background-color: #8A2BE2; /* Azul violeta */
+            background-color: #8A2BE2;
         }
-
         .syllable-da, .syllable-de, .syllable-di, .syllable-do, .syllable-du {
-            background-color: #FF4500; /* Naranja rojo */
+            background-color: #FF4500;
         }
-
         .syllable-fa, .syllable-fe, .syllable-fi, .syllable-fo, .syllable-fu {
-            background-color: #7FFF00; /* Chartreuse */
+            background-color: #7FFF00;
         }
-
         .syllable-ga, .syllable-ge, .syllable-gi, .syllable-go, .syllable-gu {
-            background-color: #8B4513; /* Marrón cuero */
+            background-color: #8B4513;
         }
-
         .syllable-ha, .syllable-he, .syllable-hi, .syllable-ho, .syllable-hu {
-            background-color: #2E8B57; /* Verde mar */
+            background-color: #2E8B57;
         }
-
         .syllable-ja, .syllable-je, .syllable-ji, .syllable-jo, .syllable-ju {
-            background-color: #D2691E; /* Chocolate */
+            background-color: #D2691E;
         }
-
         .syllable-na, .syllable-ne, .syllable-ni, .syllable-no, .syllable-nu {
-            background-color: #A52A2A; /* Marrón */
+            background-color: #A52A2A;
         }
-
         .syllable-ra, .syllable-re, .syllable-ri, .syllable-ro, .syllable-ru {
-            background-color: #FF8C00; /* Naranja oscuro */
+            background-color: #FF8C00;
         }
-
         .syllable-ta, .syllable-te, .syllable-ti, .syllable-to, .syllable-tu {
-            background-color: #ADFF2F; /* Verde amarillento */
+            background-color: #ADFF2F;
         }
-
         .syllable-va, .syllable-ve, .syllable-vi, .syllable-vo, .syllable-vu {
-            background-color: #DA70D6; /* Orquídea */
+            background-color: #DA70D6;
         }
-
         .syllable-ya, .syllable-ye, .syllable-yi, .syllable-yo, .syllable-yu {
-            background-color: #1E90FF; /* Azul Dodger */
+            background-color: #1E90FF;
         }
-
         .syllable-za, .syllable-ze, .syllable-zi, .syllable-zo, .syllable-zu {
-            background-color: #DC143C; /* Carmesí */
+            background-color: #DC143C;
         }
-
         #images img {
             width: 80px;
             margin: 5px;
         }
-
         button {
             font-size: 24px;
             padding: 10px 20px;
@@ -144,23 +119,19 @@
             margin: 10px;
             box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         button:hover {
             background-color: #45a049;
         }
-
         #message {
             font-size: 24px;
             color: green;
         }
-
         #currentWordDisplay {
             font-size: 36px;
             font-weight: bold;
             color: white;
             text-shadow: 2px 2px 4px #000;
         }
-
         #inputArea input {
             font-size: 36px;
             padding: 10px;
@@ -169,23 +140,19 @@
             border-radius: 5px;
             width: 200px;
         }
-
         @media (max-width: 600px) {
             #letters, #currentWordDisplay {
                 font-size: 32px;
             }
-
             #syllables button {
                 font-size: 20px;
                 padding: 8px;
                 margin: 4px;
             }
-
             button {
                 font-size: 20px;
                 padding: 8px 16px;
             }
-
             #inputArea input {
                 font-size: 32px;
                 width: 150px;
@@ -250,7 +217,6 @@
         let constructedWord = "";
         let inputWord = "";
         let userName = "";
-
         const lettersDiv = document.getElementById("letters");
         const syllablesDiv = document.getElementById("syllables");
         const imagesDiv = document.getElementById("images");
@@ -279,10 +245,8 @@
                     return;
                 }
             }
-
             nameInput.style.display = "none";
             modeButtons.style.display = "block";
-
             currentMode = mode;
             messageDiv.textContent = "";
             syllableIndex = 0;
@@ -292,7 +256,6 @@
             imagesDiv.innerHTML = "";
             syllablesDiv.innerHTML = "";
             inputArea.innerHTML = "";
-
             if (mode === "syllables") {
                 const randomWord = words[Math.floor(Math.random() * words.length)];
                 currentWord = randomWord.word;
@@ -379,10 +342,9 @@
         }
 
         function displayRewardMessage(message) {
-            // Frases de felicitación variadas
             const rewardMessages = [
                 `¡Muy bien, ${userName}! ¡Correcto!`,
-				`¡Excelente, ${userName}! ¡Correcto!`,
+                `¡Excelente, ${userName}! ¡Correcto!`,
                 `¡Buen trabajo, ${userName}! ¡Lo lograste!`,
                 `¡Fantástico, ${userName}! ¡Correcto!`,
                 `¡Bravo, ${userName}! ¡Lo hiciste bien!`
@@ -430,24 +392,36 @@
             }
         }
 
+        // FUNCIÓN CORREGIDA PARA EL SINTETIZADOR DE VOZ
         function speak(text) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'es-ES';
-            window.speechSynthesis.speak(utterance);
+            utterance.lang = 'es-ES'; // Prioriza español
+            
+            // Espera a que las voces estén disponibles
+            if (window.speechSynthesis.getVoices().length === 0) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    const spanishVoice = voices.find(voice => voice.lang.startsWith('es-'));
+                    if (spanishVoice) utterance.voice = spanishVoice;
+                    window.speechSynthesis.speak(utterance);
+                };
+            } else {
+                const voices = window.speechSynthesis.getVoices();
+                const spanishVoice = voices.find(voice => voice.lang.startsWith('es-'));
+                if (spanishVoice) utterance.voice = spanishVoice;
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
-		function displayImagesForWord(word) {
-			const shuffledImages = shuffle(words.filter(w => w.word !== word));
-			// Agregar la imagen correcta al azar en una posición aleatoria
-			const randomIndex = Math.floor(Math.random() * shuffledImages.length);
-			shuffledImages.splice(randomIndex, 0, { word: word, image: currentImage });
-
-    const imageOptions = shuffledImages.map(word => {
-        return `<img src="${word.image}" alt="${word.word}" onclick="checkWord('${word.word}')">`;
-    }).join("");
-    imagesDiv.innerHTML = imageOptions;
-}
-
+        function displayImagesForWord(word) {
+            const shuffledImages = shuffle(words.filter(w => w.word !== word));
+            const randomIndex = Math.floor(Math.random() * shuffledImages.length);
+            shuffledImages.splice(randomIndex, 0, { word: word, image: currentImage });
+            const imageOptions = shuffledImages.map(word => {
+                return `<img src="${word.image}" alt="${word.word}" onclick="checkWord('${word.word}')">`;
+            }).join("");
+            imagesDiv.innerHTML = imageOptions;
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             // Código que se ejecuta cuando se carga la página
