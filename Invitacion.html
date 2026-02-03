@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Misión: El Secreto de Emilia 🕵️‍♀️</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --dark: #2f3542;
+            --bg-game: #dfe4ea;
+            --envelope-color: #ff6b81;
+            --envelope-inside: #f1f2f6;
+            --digital-red: #ff0000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Fuente más "secreta" */
+            background: var(--bg-game);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA DE SUSPENSO (INTRO) --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2f3640 0%, #000000 100%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        #intro-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Reloj Bomba */
+        .bomb-clock-container {
+            background: #000;
+            padding: 15px 30px;
+            border: 4px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+        }
+
+        .bomb-label {
+            color: #bdc3c7;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        #countdown {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--digital-red);
+            text-shadow: 0 0 10px var(--digital-red);
+            letter-spacing: 3px;
+        }
+
+        /* Animación de parpadeo suave para el reloj */
+        @keyframes tick {
+            0% { opacity: 1; text-shadow: 0 0 10px red; }
+            50% { opacity: 0.8; text-shadow: 0 0 2px red; }
+            100% { opacity: 1; text-shadow: 0 0 10px red; }
+        }
+        .ticking {
+            animation: tick 1s infinite;
+        }
+
+        /* --- SOBRE MEJORADO --- */
+        .envelope-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Animación de flotar */
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ff4757; /* Color base oscuro */
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* La Carta adentro */
+        .mission-letter {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 90%; /* Un poco más pequeña que el sobre */
+            background: #fff;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1; /* Detrás de las solapas frontales */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .mission-letter h2 {
+            font-size: 1.2rem;
+            color: #c0392b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .mission-letter p {
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        /* Solapas Frontales (Izquierda, Derecha, Abajo) */
+        .envelope-front-left {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 100px 0 100px 150px; /* Triángulo lateral */
+            border-color: transparent transparent transparent #ff6b81;
+            z-index: 3;
+        }
+
+        .envelope-front-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 100px 150px 100px 0; /* Triángulo lateral */
+            border-color: transparent #ff6b81 transparent transparent;
+            z-index: 3;
+        }
+
+        .envelope-front-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 150px 110px 150px; /* Triángulo inferior */
+            border-color: transparent transparent #ff7e90 transparent; /* Un poco más claro */
+            z-index: 4;
+        }
+
+        /* Solapa Superior (La que se abre) */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 110px 150px 0 150px;
+            border-color: #ff4757 transparent transparent transparent; /* Más oscuro */
+            transform-origin: top;
+            transition: transform 0.4s ease, z-index 0.4s;
+            z-index: 5; /* Tapando todo */
+        }
+
+        /* ESTADOS DE APERTURA */
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0; /* Pasa atrás */
+        }
+
+        .envelope-container.open .mission-letter {
+            transform: translateY(-130px); /* Sube la carta */
+            z-index: 6; /* Queda arriba de todo */
+        }
+
+        .start-btn {
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 0 #218c74;
+            transition: all 0.1s;
+        }
+
+        .start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #218c74;
+        }
+
+        .hint-text {
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 0.8rem;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* --- JUEGO (GAMEPLAY) --- */
+        #game-interface {
+            display: none; /* Oculto al inicio */
+            width: 100%;
+            max-width: 800px;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        h1 {
+            color: #ff4757;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #ff4757;
+            padding-bottom: 5px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .instructions-bar {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            max-width: 600px;
+        }
+
+        .game-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .face.front {
+            background: #2f3542;
+            color: #fff;
+            font-size: 2rem;
+            border: 2px solid #fff;
+        }
+
+        .face.back {
+            background: #fff;
+            transform: rotateY(180deg);
+            overflow: hidden;
+            border: 2px solid #ff4757;
+        }
+
+        .face.back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- RECOMPENSA FINAL --- */
+        #secret-dossier {
+            display: none;
+            background: #fff;
+            border: 2px dashed #ff4757;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        .stamp {
+            border: 3px solid #ff4757;
+            color: #ff4757;
+            display: inline-block;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transform: rotate(-5deg);
+            margin-bottom: 20px;
+        }
+
+        .data-row {
+            margin: 15px 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .data-label { font-weight: bold; color: #555; display: block; font-size: 0.8rem; }
+        .data-val { font-size: 1.2rem; color: #2f3542; font-weight: bold; }
+
+        .map-action {
+            display: inline-block;
+            margin-top: 15px;
+            background: #3742fa;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(55, 66, 250, 0.3);
+        }
+
+        #confetti-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @media (max-width: 500px) {
+            .card { width: 80px; height: 80px; }
+            #countdown { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE INTRODUCCIÓN TIPO ESPÍA -->
+    <div id="intro-overlay">
+        
+        <div class="bomb-clock-container">
+            <div class="bomb-label">Tiempo para autodestrucción:</div>
+            <div id="countdown" class="ticking">00:00:00</div>
+        </div>
+
+        <!-- El Sobre Interactivo -->
+        <div class="envelope-container floating" id="envelope" onclick="openEnvelope()">
+            
+            <div class="envelope-body"></div>
+            
+            <!-- La Carta (oculta inicialmente) -->
+            <div class="mission-letter">
+                <h2>📁 Misión Confidencial</h2>
+                <p>
+                    Los datos del cumpleaños #11 han sido encriptados.
+                    <br>
+                    Resuelve el patrón de memoria para acceder.
+                </p>
+                <button class="start-btn" onclick="goToGame(event)">Desactivar Seguridad</button>
+            </div>
+
+            <!-- Capas del sobre para tapar la carta -->
+            <div class="envelope-front-left"></div>
+            <div class="envelope-front-right"></div>
+            <div class="envelope-front-bottom"></div>
+            
+            <!-- Solapa superior (la que se mueve) -->
+            <div class="envelope-flap"></div>
+        </div>
+
+        <div class="hint-text">⚠️ TOCA EL PAQUETE PARA ABRIR ⚠️</div>
+
+    </div>
+
+    <!-- JUEGO DE MEMORIA -->
+    <div id="game-interface">
+        <header>
+            <h1>🕵️‍♀️ Protocolo de Acceso</h1>
+            <div class="instructions-bar">
+                Encuentra las 4 parejas de identidades para desbloquear la ubicación.
+            </div>
+        </header>
+
+        <div class="game-grid" id="grid">
+            <!-- Las cartas se generan aquí -->
+        </div>
+
+        <!-- Recompensa Final -->
+        <div id="secret-dossier">
+            <div class="stamp">ACCESO CONCEDIDO</div>
+            
+            <div class="data-row">
+                <span class="data-label">OBJETIVO</span>
+                <span class="data-val">Cumpleaños Emilia (11 Años)</span>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">FECHA DE EJECUCIÓN</span>
+                <span class="data-val">06 de Febrero</span>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">HORA H</span>
+                <span class="data-val">17:00 - 20:00 HS</span>
+            </div>
+
+            <div class="data-row">
+                <span class="data-label">UBICACIÓN ESTRATÉGICA</span>
+                <span class="data-val">Los Condores 598</span>
+            </div>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=Los+Condores+598" target="_blank" class="map-action">
+                📍 NAVEGAR AL OBJETIVO
+            </a>
+        </div>
+    </div>
+
+    <canvas id="confetti-layer"></canvas>
+
+    <script>
+        /* --- 1. LÓGICA DEL RELOJ BOMBA --- */
+        function updateTimer() {
+            // Configurar fecha: 6 de Febrero a las 17:00
+            const currentYear = new Date().getFullYear();
+            let target = new Date(`${currentYear}-02-06T17:00:00`);
+            let now = new Date();
+            
+            // Ajuste simple: Si ya pasó, apuntar al próximo año o mostrar 00
+            if (now > target) {
+                // target = new Date(`${currentYear + 1}-02-06T17:00:00`); 
+                // O mostrar 00:00:00 si ya pasó
+            }
+
+            let diff = target - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').innerText = "00:00:00";
+                document.getElementById('countdown').classList.remove('ticking');
+                return;
+            }
+
+            let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            let h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            let s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // Formato 00:00:00 (sumando días a horas si se prefiere o mostrándolo aparte)
+            // Para efecto bomba, mejor mostrar DD:HH:MM:SS si hay días, o solo HH:MM:SS
+            let timeString = 
+                (d > 0 ? d + "d " : "") + 
+                (h < 10 ? "0"+h : h) + ":" + 
+                (m < 10 ? "0"+m : m) + ":" + 
+                (s < 10 ? "0"+s : s);
+
+            document.getElementById('countdown').innerText = timeString;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        /* --- 2. LÓGICA DEL SOBRE --- */
+        let isEnvelopeOpen = false;
+        
+        function openEnvelope() {
+            if (isEnvelopeOpen) return;
+            isEnvelopeOpen = true;
+
+            const envelope = document.getElementById('envelope');
+            const hint = document.querySelector('.hint-text');
+            
+            envelope.classList.remove('floating'); // Dejar de flotar para facilitar click en botón
+            envelope.classList.add('open');
+            hint.style.opacity = '0';
+        }
+
+        function goToGame(e) {
+            e.stopPropagation(); // Evitar click en sobre
+            const overlay = document.getElementById('intro-overlay');
+            const gameInterface = document.getElementById('game-interface');
+
+            overlay.classList.add('fade-out');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                gameInterface.style.display = 'flex';
+            }, 800);
+        }
+
+        /* --- 3. JUEGO DE MEMORIA --- */
+        const images = [
+            'emi (1).jpeg', 'emi (1).jpeg',
+            'emi (2).jpeg', 'emi (2).jpeg',
+            'emi (3).jpeg', 'emi (3).jpeg',
+            'emi (4).jpeg', 'emi (4).jpeg'
+        ];
+        
+        const grid = document.getElementById('grid');
+        let cardsChosen = [];
+        let cardsChosenIds = [];
+        let cardsWon = [];
+
+        function createBoard() {
+            // Barajar
+            images.sort(() => 0.5 - Math.random());
+
+            for (let i = 0; i < images.length; i++) {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.setAttribute('data-id', i);
+                
+                // Estructura HTML de la carta
+                card.innerHTML = `
+                    <div class="face front">?</div>
+                    <div class="face back">
+                        <img src="${images[i]}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>'">
+                    </div>
+                `;
+
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            }
+        }
+
+        function flipCard() {
+            let cardId = this.getAttribute('data-id');
+            
+            // Evitar clic en la misma o si ya hay 2 giradas
+            if (cardsChosenIds.includes(cardId) || cardsChosen.length === 2 || cardsWon.includes(cardId)) return;
+
+            cardsChosen.push(images[cardId]);
+            cardsChosenIds.push(cardId);
+            this.classList.add('flipped');
+
+            if (cardsChosen.length === 2) {
+                setTimeout(checkForMatch, 500);
+            }
+        }
+
+        function checkForMatch() {
+            const cards = document.querySelectorAll('.card');
+            const optionOneId = cardsChosenIds[0];
+            const optionTwoId = cardsChosenIds[1];
+
+            if (cardsChosen[0] === cardsChosen[1]) {
+                // Coincidencia
+                cardsWon.push(optionOneId);
+                cardsWon.push(optionTwoId);
+                // Opcional: efecto visual en las cartas ganadas
+            } else {
+                // No coincidencia
+                cards[optionOneId].classList.remove('flipped');
+                cards[optionTwoId].classList.remove('flipped');
+            }
+
+            cardsChosen = [];
+            cardsChosenIds = [];
+
+            if (cardsWon.length === images.length) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('grid').style.display = 'none';
+            document.querySelector('.instructions-bar').innerText = "¡ENCRIPTACIÓN ROTA!";
+            document.getElementById('secret-dossier').style.display = 'block';
+            startConfetti();
+        }
+
+        /* --- 4. CONFETI --- */
+        function startConfetti() {
+            const canvas = document.getElementById('confetti-layer');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            for(let i=0; i<150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: `hsl(${Math.random()*360}, 100%, 50%)`,
+                    size: Math.random()*5 + 5,
+                    speed: Math.random()*3 + 2,
+                    wobble: Math.random()*10
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    p.wobble += 0.1;
+                    p.x += Math.sin(p.wobble) * 2;
+                    
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+
+                    if(p.y > canvas.height) p.y = -10;
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Iniciar
+        createBoard();
+
+    </script>
+</body>
+</html>
